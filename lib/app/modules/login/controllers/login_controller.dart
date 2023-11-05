@@ -25,8 +25,17 @@ class LoginController extends GetxController {
           if (userCredential.user!.emailVerified == true) {
             print(userCredential); //* print userCredential
 
-            Get.snackbar("Yey", "Login Berhasil!");
-            Get.offAllNamed(Routes.HOME);
+            //^ CHANGE PASSWORD! IF PASSWORD == 'KARYAWAN'
+            if (passController.text == 'karyawan') {
+              Get.snackbar(
+                "Ganti Password",
+                "Silahkan ganti password anda terlebih dahulu!",
+              );
+              Get.offAllNamed(Routes.NEW_PASSWORD);
+            } else {
+              Get.snackbar("Yey", "Login Berhasil!");
+              Get.offAllNamed(Routes.HOME);
+            }
           } else {
             Get.defaultDialog(
               title: "Email Belum Terverifikasi",
