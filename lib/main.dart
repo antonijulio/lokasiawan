@@ -1,7 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// FIREBASE
+//? FIREBASE
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -13,11 +14,24 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    GetMaterialApp(
-      title: "Presence App",
-      debugShowCheckedModeBanner: false,
-      initialRoute: Routes.LOGIN,
-      getPages: AppPages.routes,
+    StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const MaterialApp(
+            home: Scaffold(
+              body: CircularProgressIndicator(),
+            ),
+          );
+        }
+        print(snapshot.data); //* print currentUser
+        return GetMaterialApp(
+          title: "Presence App",
+          debugShowCheckedModeBanner: false,
+          initialRoute: snapshot.data != null ? Routes.HOME : Routes.LOGIN,
+          getPages: AppPages.routes,
+        );
+      },
     ),
   );
 }
