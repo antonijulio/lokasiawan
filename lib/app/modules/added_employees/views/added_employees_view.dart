@@ -37,16 +37,31 @@ class AddedEmployeesView extends GetView<AddedEmployeesController> {
           ),
           const SizedBox(height: 32.0),
           //^ BUTTON INPUT
-          ElevatedButton(
-            onPressed: () {
-              controller.addEmployees();
-            },
-            child: const Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 4.0,
+          Obx(
+            () => ElevatedButton(
+              onPressed: () async {
+                if (controller.isLoading.isFalse) {
+                  await controller.addEmployees();
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 4.0,
+                ),
+                child: controller.isLoading.isFalse
+                    ? const Text("Tambah Karyawan")
+                    : const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
               ),
-              child: Text("Tambah Karyawan"),
             ),
           ),
         ],

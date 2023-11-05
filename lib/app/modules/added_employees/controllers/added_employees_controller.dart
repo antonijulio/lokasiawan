@@ -8,12 +8,16 @@ class AddedEmployeesController extends GetxController {
   final emailEmployeeController = TextEditingController();
   final passAdminController = TextEditingController();
 
+  RxBool isLoading = false.obs;
+  RxBool isLoadingAddEmployee = false.obs;
+
   //? FIREBASE
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<void> processAddData() async {
     if (passAdminController.text.isNotEmpty) {
+      isLoadingAddEmployee.value = true;
       try {
         //^ ADMIN VERIFICATION
         String emailAdmin = auth.currentUser!.email!;
@@ -55,7 +59,9 @@ class AddedEmployeesController extends GetxController {
           Get.back(); //*kembali ke home
           Get.snackbar("Yey", "Berhasil menambahkan karyawan");
         }
+        isLoadingAddEmployee.value = false;
       } on FirebaseAuthException catch (e) {
+        isLoadingAddEmployee.value = false;
         if (e.code == 'weak-password') {
           Get.snackbar("Ups ..", "Password terlalu lemah!");
         } else if (e.code == 'email-already-in-use') {
@@ -67,6 +73,7 @@ class AddedEmployeesController extends GetxController {
         Get.snackbar("Terjadi kesalahan server!", e.toString());
       }
     } else {
+      isLoading.value = false;
       Get.snackbar("Ups ..", "Password admin tidak boleh kosong!");
     }
   }
@@ -74,6 +81,7 @@ class AddedEmployeesController extends GetxController {
   Future<void> addEmployees() async {
     if (nameEmployeeController.text.isNotEmpty &&
         emailEmployeeController.text.isNotEmpty) {
+      isLoading.value = true;
       Get.defaultDialog(
         title: "Validasi Admin",
         content: Column(
@@ -94,14 +102,24 @@ class AddedEmployeesController extends GetxController {
         ),
         actions: [
           OutlinedButton(
-            onPressed: () => Get.back(),
+            onPressed: () {
+              isLoading.value = false;
+              Get.back();
+            },
             child: const Text("Cancel"),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              await processAddData();
-            },
-            child: const Text("Submit"),
+          Obx(
+            () => ElevatedButton(
+              onPressed: () async {
+                if (isLoadingAddEmployee.isFalse) {
+                  await processAddData();
+                }
+                isLoading.value = false;
+              },
+              child: isLoadingAddEmployee.isFalse
+                  ? const Text("Submit")
+                  : const Text("Loading..."),
+            ),
           ),
         ],
       );
