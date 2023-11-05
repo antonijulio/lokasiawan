@@ -60,7 +60,7 @@ class AddedEmployeesController extends GetxController {
           Get.snackbar("Ups ..", "Password terlalu lemah!");
         } else if (e.code == 'email-already-in-use') {
           Get.snackbar("Ups ..", "Email sudah digunakan!");
-        } else if (e.code == 'wrong-password') {
+        } else if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
           Get.snackbar("Ups ..", "Password admin salah!");
         }
       } catch (e) {
