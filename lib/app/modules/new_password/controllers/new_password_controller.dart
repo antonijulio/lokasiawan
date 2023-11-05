@@ -22,8 +22,8 @@ class NewPasswordController extends GetxController {
             email: email,
             password: newPassController.text,
           );
-          Get.snackbar("Yey", "Berhasil mengganti password");
           Get.offAllNamed(Routes.HOME);
+          Get.snackbar("Yey", "Berhasil mengganti password");
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
             Get.snackbar(

@@ -36,8 +36,8 @@ class LoginController extends GetxController {
               );
               Get.offAllNamed(Routes.NEW_PASSWORD);
             } else {
-              Get.snackbar("Yey", "Login Berhasil!");
               Get.offAllNamed(Routes.HOME);
+              Get.snackbar("Yey", "Login Berhasil!");
             }
           } else {
             Get.defaultDialog(
