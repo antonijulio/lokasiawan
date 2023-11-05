@@ -46,7 +46,7 @@ class AddedEmployeesView extends GetView<AddedEmployeesController> {
                 horizontal: 8.0,
                 vertical: 4.0,
               ),
-              child: Text("Submit"),
+              child: Text("Tambah Karyawan"),
             ),
           ),
         ],
