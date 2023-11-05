@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "159980919974",
+    "project_id": "lokasiawan-13a8b",
+    "storage_bucket": "lokasiawan-13a8b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159980919974:android:d1ce488d515243e2d7a867",
+        "android_client_info": {
+          "package_name": "com.company.lokasiawan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEd0HuJJBkjq8Ly7fDsVqImFHnx8DA5YU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
