@@ -28,9 +28,34 @@ class LoginController extends GetxController {
             Get.snackbar("Yey", "Login Berhasil!");
             Get.offAllNamed(Routes.HOME);
           } else {
-            Get.snackbar(
-              "Ups ..",
-              "Email anda belum Terverifikasi, Segera check email atau hubungi Admin!",
+            Get.defaultDialog(
+              title: "Email Belum Terverifikasi",
+              middleText:
+                  "Segera cek kembali email anda atau klik tombol dibawah!",
+              actions: [
+                OutlinedButton(
+                  onPressed: () => Get.back(),
+                  child: const Text("Cancel"),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      await userCredential.user!.sendEmailVerification();
+                      Get.back();
+                      Get.snackbar(
+                        "Yey",
+                        "Berhasil kirim ulang email verifikasi, silahkan cek kembali email anda!",
+                      );
+                    } catch (e) {
+                      Get.snackbar(
+                        "Terjadi Kesalahan Server!",
+                        e.toString(),
+                      );
+                    }
+                  },
+                  child: const Text("Kirim Ulang Email"),
+                ),
+              ],
             );
           }
         }
