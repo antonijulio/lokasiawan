@@ -34,7 +34,9 @@ class AddedEmployeesController extends GetxController {
             "createdAt": DateTime.now().toIso8601String(),
           });
 
-          userCredential.user!.sendEmailVerification();
+          //^ SEND EMAIL VERIFICATION
+          await userCredential.user!.sendEmailVerification();
+
           Get.snackbar("Yey", "Berhasil menambahkan karyawan");
           Get.offAllNamed(Routes.HOME);
         }
