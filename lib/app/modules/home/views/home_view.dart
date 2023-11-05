@@ -25,7 +25,7 @@ class HomeView extends GetView<HomeController> {
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
               Get.snackbar("Yey", "Berhasil Logout");
-              Get.toNamed(Routes.LOGIN);
+              Get.offAllNamed(Routes.LOGIN);
             },
             icon: const Icon(Icons.logout_outlined),
           ),
