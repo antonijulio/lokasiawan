@@ -75,7 +75,10 @@ class ProfileContent extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
-          onTap: () {},
+          onTap: () => Get.toNamed(
+            Routes.UPDATE_PROFILE,
+            arguments: userData,
+          ),
         ),
         const SizedBox(height: 4.0),
         //^ UPDATE PASSWORD
@@ -95,7 +98,7 @@ class ProfileContent extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
-          onTap: () {},
+          onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
         ),
         //^ IF ADMIN == GET ADD EMPLOYEE
         if (userData['role'] == 'admin')
