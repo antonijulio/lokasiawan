@@ -12,6 +12,7 @@ dependencies:
   firebase_auth: 4.12.1
   cloud_firestore: 4.12.2
   firebase_storage: 11.4.1
+  google_fonts: 6.1.0
   flutter: 
     sdk: flutter
 
