@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lokasiawan/app/routes/app_pages.dart';
 
 class AddedEmployeesController extends GetxController {
   final nameEmployeeController = TextEditingController();
@@ -41,6 +42,7 @@ class AddedEmployeesController extends GetxController {
             "name": nameEmployeeController.text,
             "email": emailEmployeeController.text,
             "uid": userID,
+            "role": "karyawan", //*posisi user masih hardcode
             "createdAt": DateTime.now().toIso8601String(),
           });
 
@@ -55,8 +57,7 @@ class AddedEmployeesController extends GetxController {
             password: passAdminController.text,
           );
 
-          Get.back(); //* tutup dialog
-          Get.back(); //*kembali ke home
+          Get.offAllNamed(Routes.HOME); //*kembali ke home
           Get.snackbar("Yey", "Berhasil menambahkan karyawan");
         }
         isLoadingAddEmployee.value = false;
