@@ -22,16 +22,51 @@ class ProfileContent extends StatelessWidget {
       children: [
         const SizedBox(height: 24.0),
         //^ PROFILE PHOTO
-        CircleAvatar(
-          maxRadius: 50.0,
-          child: Text(
-            "${userData['name'][0]}".toUpperCase(),
-            style: GoogleFonts.poppins(
-              color: Colors.white,
-              fontSize: 38,
-              fontWeight: FontWeight.bold,
+        Stack(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              child: CircleAvatar(
+                maxRadius: 50.0,
+                child: Text(
+                  "${userData['name'][0]}".toUpperCase(),
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 38,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
-          ),
+            Positioned(
+              left: MediaQuery.of(context).size.width / 2.05,
+              top: 12.5,
+              child: Container(
+                height: 18,
+                width: 58,
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(4.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 3,
+                      offset: const Offset(2, 2),
+                    ),
+                  ],
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  userData['role'],
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 8.0),
         //^ DISPLAY NAME
