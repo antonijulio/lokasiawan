@@ -1,23 +1,14 @@
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
+  // RxBool isLoading = false.obs;
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
-  }
+  // FirebaseAuth auth = FirebaseAuth.instance;
+  // FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
+  // Stream<DocumentSnapshot<Map<String, dynamic>>> userStream() async* {
+  //   String userID = auth.currentUser!.uid;
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
+  //   yield* firestore.collection("karyawan").doc(userID).snapshots();
+  // }
 }
