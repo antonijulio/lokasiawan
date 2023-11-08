@@ -17,52 +17,27 @@ class ProfileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String defAvatar = 'https://ui-avatars.com/api/?name=${userData['name']}';
+
     return ListView(
       padding: const EdgeInsets.all(16.0),
       children: [
         const SizedBox(height: 24.0),
         //^ PROFILE PHOTO
-        Stack(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              width: double.infinity,
-              child: CircleAvatar(
-                maxRadius: 50.0,
-                child: Text(
-                  "${userData['name'][0]}".toUpperCase(),
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 38,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: MediaQuery.of(context).size.width / 2.05,
-              top: 12.5,
-              child: Container(
-                height: 18,
-                width: 58,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(4.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 3,
-                      offset: const Offset(2, 2),
-                    ),
-                  ],
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  userData['role'],
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w600,
-                  ),
+            ClipOval(
+              child: SizedBox(
+                width: 100,
+                height: 100,
+                child: Image.network(
+                  userData['avatar'] != null
+                      ? userData['avatar'] != ""
+                          ? userData['avatar']
+                          : defAvatar
+                      : defAvatar,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),

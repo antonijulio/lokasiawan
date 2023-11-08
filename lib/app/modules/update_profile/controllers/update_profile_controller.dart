@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UpdateProfileController extends GetxController {
   final nameController = TextEditingController();
@@ -9,6 +10,10 @@ class UpdateProfileController extends GetxController {
   RxBool isLoading = false.obs;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  final ImagePicker picker = ImagePicker();
+
+  XFile? image;
 
   Future<void> updateProfile(String userID) async {
     isLoading.value = true;
@@ -30,5 +35,13 @@ class UpdateProfileController extends GetxController {
       isLoading.value = false;
       Get.snackbar("Ups", "Email & Nama tidak boleh kosong!");
     }
+  }
+
+  void pickImage() async {
+    image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+    } else {}
+    update();
   }
 }

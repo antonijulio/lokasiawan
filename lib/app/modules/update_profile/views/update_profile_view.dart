@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -52,7 +54,66 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
             ),
             style: GoogleFonts.poppins(),
           ),
-          const SizedBox(height: 32.0),
+          const SizedBox(height: 16.0),
+          Text(
+            "Pilih Foto Profil",
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              //^ PHOTO PROFILE DISPLAY
+              GetBuilder<UpdateProfileController>(
+                builder: (controller) {
+                  if (controller.image != null) {
+                    return ClipOval(
+                      child: SizedBox(
+                        width: 110,
+                        height: 110,
+                        child: Image.file(
+                          File(controller.image!.path),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  } else {
+                    //^ DISPLAY PROFILE PHOTO FROM FIRESTORE
+                    if (userData['avatar'] != null) {
+                      return ClipOval(
+                        child: SizedBox(
+                          width: 110,
+                          height: 110,
+                          child: Image.network(
+                            userData['avatar'],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Text(
+                        "Tidak ada gambar yang di pilih",
+                        style: GoogleFonts.poppins(),
+                      );
+                    }
+                  }
+                },
+              ),
+              TextButton(
+                onPressed: () {
+                  controller.pickImage();
+                },
+                child: Text(
+                  "Pilih Foto",
+                  style: GoogleFonts.poppins(),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16.0),
           //^ BUTTON INPUT
           Obx(
             () => ElevatedButton(
