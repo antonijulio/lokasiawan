@@ -44,6 +44,8 @@ class UpdateProfileController extends GetxController {
         //^ UPDATE USER NAME
         await firestore.collection("karyawan").doc(userID).update(userData);
 
+        image = null;
+
         Get.back();
         Get.snackbar("Yey", "Profil anda berhasil di ubah");
       } catch (e) {
@@ -60,5 +62,22 @@ class UpdateProfileController extends GetxController {
   void pickImage() async {
     image = await picker.pickImage(source: ImageSource.gallery);
     update();
+  }
+
+  void deleteAvatar(String userID) async {
+    isLoading.value = true;
+    try {
+      firestore.collection("karyawan").doc(userID).update({
+        "avatar": FieldValue.delete(),
+      });
+
+      Get.back();
+      Get.snackbar("Yey", "Foto profil berhasil dihapus");
+    } catch (e) {
+      Get.snackbar("Terjadi Kesalahan Server!", e.toString());
+    } finally {
+      isLoading.value = false;
+      update();
+    }
   }
 }

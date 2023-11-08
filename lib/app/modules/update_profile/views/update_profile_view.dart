@@ -83,20 +83,45 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
                   } else {
                     //^ DISPLAY PROFILE PHOTO FROM FIRESTORE
                     if (userData['avatar'] != null) {
-                      return ClipOval(
-                        child: SizedBox(
-                          width: 110,
-                          height: 110,
-                          child: Image.network(
-                            userData['avatar'],
-                            fit: BoxFit.cover,
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ClipOval(
+                            child: SizedBox(
+                              width: 110,
+                              height: 110,
+                              child: Image.network(
+                                userData['avatar'],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
-                        ),
+                          const SizedBox(height: 4.0),
+                          TextButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red.shade50,
+                              foregroundColor: Colors.red,
+                            ),
+                            onPressed: () {
+                              if (controller.isLoading.isFalse) {
+                                controller.deleteAvatar(userData['uid']);
+                              }
+                            },
+                            child: Text(
+                              "Hapus Foto",
+                              style: GoogleFonts.poppins(),
+                            ),
+                          ),
+                        ],
                       );
                     } else {
-                      return Text(
-                        "Tidak ada gambar yang di pilih",
-                        style: GoogleFonts.poppins(),
+                      return SizedBox(
+                        width: 110,
+                        height: 110,
+                        child: Image.asset(
+                          'assets/img/no_image_choosen.png',
+                          fit: BoxFit.cover,
+                        ),
                       );
                     }
                   }
