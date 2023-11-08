@@ -19,6 +19,7 @@ class UpdateProfileController extends GetxController {
           "name": nameController.text,
         });
 
+        Get.back();
         Get.snackbar("Yey", "Berhasil mengubah nama");
       } catch (e) {
         Get.snackbar("Terjadi Kesalahan Server!", e.toString());
