@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as fs;
 
 class UpdateProfileController extends GetxController {
   final nameController = TextEditingController();
@@ -10,6 +13,8 @@ class UpdateProfileController extends GetxController {
   RxBool isLoading = false.obs;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //? fs = FIREBASE STORAGE
+  fs.FirebaseStorage storage = fs.FirebaseStorage.instance;
 
   final ImagePicker picker = ImagePicker();
 
@@ -19,13 +24,28 @@ class UpdateProfileController extends GetxController {
     isLoading.value = true;
     if (nameController.text.isNotEmpty && emailController.text.isNotEmpty) {
       try {
-        //^ UPDATE USER NAME
-        await firestore.collection("karyawan").doc(userID).update({
+        Map<String, dynamic> userData = {
           "name": nameController.text,
-        });
+        };
+
+        //^ UPLOAD PROFILE PHOTO
+        if (image != null) {
+          File file = File(image!.path);
+          //? ext = extention[.jpg, .png, dll]
+          String ext = image!.name.split('.').last;
+
+          await storage.ref('$userID/avatar.$ext').putFile(file);
+          String avatarUrl =
+              await storage.ref('$userID/avatar.$ext').getDownloadURL();
+
+          userData.addAll({"avatar": avatarUrl});
+        }
+
+        //^ UPDATE USER NAME
+        await firestore.collection("karyawan").doc(userID).update(userData);
 
         Get.back();
-        Get.snackbar("Yey", "Berhasil mengubah nama");
+        Get.snackbar("Yey", "Profil anda berhasil di ubah");
       } catch (e) {
         Get.snackbar("Terjadi Kesalahan Server!", e.toString());
       } finally {
@@ -39,9 +59,6 @@ class UpdateProfileController extends GetxController {
 
   void pickImage() async {
     image = await picker.pickImage(source: ImageSource.gallery);
-
-    if (image != null) {
-    } else {}
     update();
   }
 }

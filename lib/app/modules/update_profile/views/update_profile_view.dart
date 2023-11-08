@@ -103,6 +103,9 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
                 },
               ),
               TextButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue.shade50,
+                ),
                 onPressed: () {
                   controller.pickImage();
                 },
