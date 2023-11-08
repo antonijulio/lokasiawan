@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 //? FIREBASE
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lokasiawan/app/controllers/page_index_controller.dart';
 import 'firebase_options.dart';
 
 import 'app/routes/app_pages.dart';
@@ -13,6 +14,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  //^ PUT PAGE CONTROLLER
+  Get.put(PageIndexController(), permanent: true);
+
   runApp(
     StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
