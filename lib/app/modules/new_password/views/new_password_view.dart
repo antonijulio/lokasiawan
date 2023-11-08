@@ -14,7 +14,7 @@ class NewPasswordView extends GetView<NewPasswordController> {
         centerTitle: true,
       ),
       body: ListView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         children: [
           //^ NEW PASSWORD
           TextField(
