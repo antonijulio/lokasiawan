@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lokasiawan/app/routes/app_pages.dart';
 
 import '../../../controllers/page_index_controller.dart';
 import '../controllers/home_controller.dart';
@@ -37,8 +38,8 @@ class HomeView extends GetView<HomeController> {
                     children: [
                       ClipOval(
                         child: SizedBox(
-                          width: 75,
-                          height: 75,
+                          width: 85,
+                          height: 85,
                           child: Image.network(
                             userData['avatar'] ?? defAvatar,
                             fit: BoxFit.cover,
@@ -73,7 +74,7 @@ class HomeView extends GetView<HomeController> {
                       vertical: 18.0,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(16.0),
                     ),
                     child: Column(
@@ -116,7 +117,7 @@ class HomeView extends GetView<HomeController> {
                       vertical: 20.0,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(16.0),
                     ),
                     child: Row(
@@ -176,7 +177,7 @@ class HomeView extends GetView<HomeController> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () => Get.toNamed(Routes.ALL_PRESENCE),
                         child: Text(
                           "Selengkapnya",
                           style: GoogleFonts.poppins(
@@ -192,62 +193,66 @@ class HomeView extends GetView<HomeController> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: 5,
                     itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Masuk",
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
+                          onTap: () => Get.toNamed(Routes.PRESENCE_DETAILS),
+                          tileColor: Colors.grey.shade200,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          title: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Masuk",
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    DateFormat.yMMMEd().format(DateTime.now()),
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
+                                    Text(
+                                      DateFormat.yMMMEd()
+                                          .format(DateTime.now()),
+                                      style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12,
+                                      ),
                                     ),
+                                  ],
+                                ),
+                                Text(
+                                  DateFormat.jms().format(DateTime.now()),
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10,
+                                    color: Colors.black54,
                                   ),
-                                ],
-                              ),
-                              Text(
-                                DateFormat.jms().format(DateTime.now()),
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 10,
-                                  color: Colors.black54,
                                 ),
-                              ),
-                              const SizedBox(height: 14.0),
-                              Text(
-                                "Keluar",
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
+                                const SizedBox(height: 14.0),
+                                Text(
+                                  "Keluar",
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                DateFormat.jms().format(DateTime.now()),
-                                style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 10,
-                                  color: Colors.black54,
+                                Text(
+                                  DateFormat.jms().format(DateTime.now()),
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10,
+                                    color: Colors.black54,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -267,7 +272,7 @@ class HomeView extends GetView<HomeController> {
         style: TabStyle.fixedCircle,
         height: 70,
         items: const [
-          TabItem(icon: Icons.home, title: 'Home'),
+          TabItem(icon: Icons.home_filled, title: 'Home'),
           TabItem(icon: Icons.fingerprint, title: 'Absen'),
           TabItem(icon: Icons.person, title: 'Profil'),
         ],
