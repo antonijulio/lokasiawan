@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:lokasiawan/app/routes/app_pages.dart';
 
 class PageIndexController extends GetxController {
   RxInt initPage = 0.obs;
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   void movePages(int index) async {
     switch (index) {
@@ -12,6 +17,7 @@ class PageIndexController extends GetxController {
         Map<String, dynamic> responseData = await determinePosition();
         if (responseData['error'] != true) {
           Position position = responseData['position'];
+          updatePosition(position);
           Get.defaultDialog(
             middleText: "${position.latitude}, ${position.longitude}",
           );
@@ -20,7 +26,6 @@ class PageIndexController extends GetxController {
             "Terjadi Kesalahan!",
             "Silahkan buka pengaturan untuk mengaktifkan lokasi",
           );
-          ;
         }
         break;
 
@@ -92,5 +97,16 @@ class PageIndexController extends GetxController {
       "message": "Berhasil mendapatkan posisi device",
       "error": false,
     };
+  }
+
+  Future<void> updatePosition(Position position) async {
+    String userID = auth.currentUser!.uid;
+
+    await firestore.collection("karyawan").doc(userID).update({
+      "last_position": {
+        "latitude": position.latitude,
+        "longitude": position.longitude,
+      }
+    });
   }
 }

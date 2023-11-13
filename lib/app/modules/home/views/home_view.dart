@@ -58,9 +58,12 @@ class HomeView extends GetView<HomeController> {
                             ),
                           ),
                           Text(
-                            "jalan bulu",
+                            userData['last_position'] != null
+                                ? "${userData['last_position']}"
+                                : "Lokasi Tidak Ditemukan",
                             style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w400,
+                              fontSize: 10,
                             ),
                           ),
                         ],
