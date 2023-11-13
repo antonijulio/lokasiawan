@@ -16,6 +16,7 @@ dependencies:
   image_picker: ^1.0.4
   convex_bottom_bar: ^3.2.0
   intl: 0.18.1
+  geolocator: 10.1.0
   flutter: 
     sdk: flutter
 
