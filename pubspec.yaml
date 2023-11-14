@@ -17,6 +17,7 @@ dependencies:
   convex_bottom_bar: ^3.2.0
   intl: 0.18.1
   geolocator: 10.1.0
+  geocoding: 2.1.1
   flutter: 
     sdk: flutter
 
