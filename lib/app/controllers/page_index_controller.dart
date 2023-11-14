@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:lokasiawan/app/routes/app_pages.dart';
 import 'package:geocoding/geocoding.dart';
 
@@ -28,7 +29,10 @@ class PageIndexController extends GetxController {
           //^ UPDATE POSITION IN FIRESTORE
           updatePosition(position, currentAddress);
 
-          print("${placemarks[0]}");
+          //^ PRESENCE
+          presence(position, currentAddress);
+
+          Get.snackbar("Yey", "Berhasil Melakukan Presensi");
         } else {
           Get.snackbar(
             "Terjadi Kesalahan!",
@@ -116,5 +120,36 @@ class PageIndexController extends GetxController {
       },
       "currentAddress": currentAddress,
     });
+  }
+
+  Future<void> presence(Position position, String currentAddress) async {
+    String userID = auth.currentUser!.uid;
+
+    //^ CREATE A NEW PRESENCE DOCUMENT FOR EACH USER ID
+    CollectionReference<Map<String, dynamic>> presenceCollection =
+        firestore.collection("karyawan").doc(userID).collection("presence");
+
+    //^ GET PRESENCE DATA COLLECTION ON THE USER ID
+    QuerySnapshot<Map<String, dynamic>> presenceSnapshot =
+        await presenceCollection.get();
+
+    DateTime currentDate = DateTime.now();
+
+    //^ PRESENCE DOCUMENT NAME
+    String presenceDocumentID =
+        DateFormat.yMd().format(currentDate).replaceAll("/", "-");
+
+    if (presenceSnapshot.docs.isEmpty) {
+      presenceCollection.doc(presenceDocumentID).set({
+        "date": currentDate.toIso8601String(),
+        "attendanceIn": {
+          "currentDate": currentDate.toIso8601String(),
+          "latitude": position.latitude,
+          "longitude": position.longitude,
+          "currentAddress": currentAddress,
+          "status": "Dalam Area",
+        }
+      });
+    } else {}
   }
 }
