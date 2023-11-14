@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:lokasiawan/app/routes/app_pages.dart';
+import 'package:geocoding/geocoding.dart';
 
 class PageIndexController extends GetxController {
   RxInt initPage = 0.obs;
@@ -15,12 +16,19 @@ class PageIndexController extends GetxController {
       //^ PRESENCE SCREEN
       case 1:
         Map<String, dynamic> responseData = await determinePosition();
+
         if (responseData['error'] != true) {
+          //^ KONVERSI TITIK KOORDINAT KE BENTUK ALAMAT
           Position position = responseData['position'];
-          updatePosition(position);
-          Get.defaultDialog(
-            middleText: "${position.latitude}, ${position.longitude}",
-          );
+          List<Placemark> placemarks = await placemarkFromCoordinates(
+              position.latitude, position.longitude);
+          String currentAddress =
+              "${placemarks[0].thoroughfare}, ${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].subAdministrativeArea}";
+
+          //^ UPDATE POSITION IN FIRESTORE
+          updatePosition(position, currentAddress);
+
+          print("${placemarks[0]}");
         } else {
           Get.snackbar(
             "Terjadi Kesalahan!",
@@ -42,6 +50,7 @@ class PageIndexController extends GetxController {
     }
   }
 
+  //^ GET LATITUDE - LONGITUDE
   Future<Map<String, dynamic>> determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -52,7 +61,7 @@ class PageIndexController extends GetxController {
       // Location services are not enabled don't continue
       // accessing the position and request users of the
       // App to enable the location services.
-      // return Future.error('Location services are disabled.');
+
       return {
         "message": "Tidak dapat mengambil lokasi pada device ini",
         "error": true,
@@ -68,7 +77,7 @@ class PageIndexController extends GetxController {
         // Android's shouldShowRequestPermissionRationale
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
-        // return Future.error('Location permissions are denied');
+
         return {
           "message": "Izin lokasi ditolak!",
           "error": true,
@@ -78,9 +87,6 @@ class PageIndexController extends GetxController {
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
-      // return Future.error(
-      //   'Location permissions are permanently denied, we cannot request permissions.',
-      // );
 
       return {
         "message":
@@ -99,14 +105,16 @@ class PageIndexController extends GetxController {
     };
   }
 
-  Future<void> updatePosition(Position position) async {
+  //^ UPDATE POSITION IN FIRESTORE
+  Future<void> updatePosition(Position position, String currentAddress) async {
     String userID = auth.currentUser!.uid;
 
     await firestore.collection("karyawan").doc(userID).update({
-      "last_position": {
+      "lastPosition": {
         "latitude": position.latitude,
         "longitude": position.longitude,
-      }
+      },
+      "currentAddress": currentAddress,
     });
   }
 }

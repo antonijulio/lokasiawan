@@ -57,13 +57,16 @@ class HomeView extends GetView<HomeController> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(
-                            userData['last_position'] != null
-                                ? "${userData['last_position']}"
-                                : "Lokasi Tidak Ditemukan",
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 10,
+                          SizedBox(
+                            width: 250,
+                            child: Text(
+                              userData['currentAddress'] != null
+                                  ? "${userData['currentAddress']}"
+                                  : "Lokasi Tidak Ditemukan",
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 10,
+                              ),
                             ),
                           ),
                         ],
