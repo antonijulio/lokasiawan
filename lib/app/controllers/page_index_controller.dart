@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:lokasiawan/app/routes/app_pages.dart';
 import 'package:geocoding/geocoding.dart';
+
+import 'package:lokasiawan/app/routes/app_pages.dart';
 
 class PageIndexController extends GetxController {
   RxInt initPage = 0.obs;
@@ -29,10 +30,16 @@ class PageIndexController extends GetxController {
           //^ UPDATE POSITION IN FIRESTORE
           updatePosition(position, currentAddress);
 
-          //^ PRESENCE
-          presence(position, currentAddress);
+          //^ CALCULATE RADIUS FROM LOCATION POINT
+          double coverageRadius = Geolocator.distanceBetween(
+            -6.982556800709237, //lat point
+            110.40921454703198, //long point
+            position.latitude, // lat radius in meters
+            position.longitude, //lat radius in meters
+          );
 
-          Get.snackbar("Yey", "Berhasil Melakukan Presensi");
+          //^ PRESENCE
+          presence(position, currentAddress, coverageRadius);
         } else {
           Get.snackbar(
             "Terjadi Kesalahan!",
@@ -122,7 +129,11 @@ class PageIndexController extends GetxController {
     });
   }
 
-  Future<void> presence(Position position, String currentAddress) async {
+  Future<void> presence(
+    Position position,
+    String currentAddress,
+    double coverageRadius,
+  ) async {
     String userID = auth.currentUser!.uid;
 
     //^ CREATE A NEW PRESENCE DOCUMENT FOR EACH USER ID
@@ -139,7 +150,14 @@ class PageIndexController extends GetxController {
     String presenceDocumentID =
         DateFormat.yMd().format(currentDate).replaceAll("/", "-");
 
+    //^ SET RADIUS
+    String locationStatus = "Diluar Area";
+    if (coverageRadius <= 200) {
+      locationStatus = "Didalam Area";
+    }
+
     if (presenceSnapshot.docs.isEmpty) {
+      //^ SET ATTENDANCE IN
       presenceCollection.doc(presenceDocumentID).set({
         "date": currentDate.toIso8601String(),
         "attendanceIn": {
@@ -147,9 +165,55 @@ class PageIndexController extends GetxController {
           "latitude": position.latitude,
           "longitude": position.longitude,
           "currentAddress": currentAddress,
-          "status": "Dalam Area",
+          "status": locationStatus,
         }
       });
-    } else {}
+
+      Get.snackbar("Berhasil", "Anda telah melakukan presensi masuk");
+    } else {
+      //^ CHECK TODAY ATTENDANCE DATA -> cek sudah absen atau belum
+      DocumentSnapshot<Map<String, dynamic>> todayAttendanceData =
+          await presenceCollection.doc(presenceDocumentID).get();
+
+      if (todayAttendanceData.exists == true) {
+        Map<String, dynamic>? todayPresenceData = todayAttendanceData.data();
+
+        //^ CHECK ATTENDANCE DATA
+        if (todayPresenceData?['attendanceOut'] != null) {
+          Get.snackbar(
+            "Ups ..",
+            "Kamu tidak bisa absen lagi karena sudah absen masuk dan keluar hari ini",
+          );
+        } else {
+          //^ UPDATE ATTENDANCE OUT
+          presenceCollection.doc(presenceDocumentID).update({
+            "date": currentDate.toIso8601String(),
+            "attendanceOut": {
+              "currentDate": currentDate.toIso8601String(),
+              "latitude": position.latitude,
+              "longitude": position.longitude,
+              "currentAddress": currentAddress,
+              "status": locationStatus,
+            }
+          });
+
+          Get.snackbar("Berhasil", "Anda telah melakukan presensi keluar");
+        }
+      } else {
+        //^ SET ATTENDANCE IN
+        presenceCollection.doc(presenceDocumentID).set({
+          "date": currentDate.toIso8601String(),
+          "attendanceIn": {
+            "currentDate": currentDate.toIso8601String(),
+            "latitude": position.latitude,
+            "longitude": position.longitude,
+            "currentAddress": currentAddress,
+            "status": locationStatus,
+          }
+        });
+
+        Get.snackbar("Berhasil", "Anda telah melakukan presensi masuk");
+      }
+    }
   }
 }
