@@ -13,4 +13,16 @@ class HomeController extends GetxController {
 
     yield* firestore.collection("karyawan").doc(userID).snapshots();
   }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamLastPresence() async* {
+    String userID = auth.currentUser!.uid;
+
+    yield* firestore
+        .collection("karyawan")
+        .doc(userID)
+        .collection("presence")
+        .orderBy("date", descending: true)
+        .limitToLast(5)
+        .snapshots();
+  }
 }

@@ -155,6 +155,7 @@ class PageIndexController extends GetxController {
     if (coverageRadius <= 200) {
       locationStatus = "Didalam Area";
     }
+    String distance = "${coverageRadius.toInt()} meters";
 
     if (presenceSnapshot.docs.isEmpty) {
       //^ SET ATTENDANCE IN
@@ -166,6 +167,7 @@ class PageIndexController extends GetxController {
           "longitude": position.longitude,
           "currentAddress": currentAddress,
           "status": locationStatus,
+          "distance": distance,
         }
       });
 
@@ -194,6 +196,7 @@ class PageIndexController extends GetxController {
               "longitude": position.longitude,
               "currentAddress": currentAddress,
               "status": locationStatus,
+              "distance": distance,
             }
           });
 
@@ -209,6 +212,7 @@ class PageIndexController extends GetxController {
             "longitude": position.longitude,
             "currentAddress": currentAddress,
             "status": locationStatus,
+            "distance": distance,
           }
         });
 
