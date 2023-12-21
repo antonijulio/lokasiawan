@@ -33,7 +33,6 @@ class ProfileView extends GetView<ProfileController> {
               Map<String, dynamic> userData = snap.data!.data()!;
               return ProfileContent(
                 userData: userData,
-                controller: controller,
               );
             } else {
               return const Center(

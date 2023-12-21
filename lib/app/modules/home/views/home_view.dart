@@ -32,7 +32,7 @@ class HomeView extends GetView<HomeController> {
               child: CircularProgressIndicator(),
             );
           } else if (userSnapshot.hasData) {
-            Map<String, dynamic> userData = userSnapshot.data!.data()!;
+            Map<String, dynamic>? userData = userSnapshot.data!.data()!;
             String defAvatar =
                 'https://ui-avatars.com/api/?name=${userData['name']}';
 
@@ -93,17 +93,17 @@ class HomeView extends GetView<HomeController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        userData['job'],
+                        userData['job'] ?? "-",
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                       Text(
-                        userData['uid']
+                        (userData['uid'] ?? "-")
                             .toString()
-                            .substring(0, 14)
-                            .toUpperCase(),
+                            .toUpperCase()
+                            .substring(0, 14),
                         style: GoogleFonts.poppins(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -112,7 +112,7 @@ class HomeView extends GetView<HomeController> {
                         maxLines: 1,
                       ),
                       Text(
-                        userData['name'],
+                        userData['name'] ?? "-",
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w400,
                         ),
@@ -132,50 +132,71 @@ class HomeView extends GetView<HomeController> {
                     color: Colors.grey.shade200,
                     borderRadius: BorderRadius.circular(16.0),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Masuk",
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
+                  child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                      stream: controller.streamTodayPresence(),
+                      builder: (context, todaySnapshot) {
+                        if (todaySnapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+
+                        Map<String, dynamic>? todayData =
+                            todaySnapshot.data?.data();
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Masuk",
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                Text(
+                                  todayData?['attendanceIn'] == null
+                                      ? "-"
+                                      : DateFormat.jms().format(DateTime.parse(
+                                          todayData!['attendanceIn']
+                                              ['currentDate'])),
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Text(
-                            "-",
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
+                            Container(
+                              width: 2,
+                              height: 40,
+                              color: Colors.grey,
                             ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        width: 2,
-                        height: 40,
-                        color: Colors.grey,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Keluar",
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Keluar",
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                Text(
+                                  todayData?['attendanceOut'] == null
+                                      ? "-"
+                                      : DateFormat.jms().format(DateTime.parse(
+                                          todayData!['attendanceOut']
+                                              ['currentDate'])),
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Text(
-                            "-",
-                            style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                          ],
+                        );
+                      }),
                 ),
                 const SizedBox(height: 16.0),
                 const Divider(thickness: 2),
@@ -232,7 +253,10 @@ class HomeView extends GetView<HomeController> {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 8),
                             child: ListTile(
-                              onTap: () => Get.toNamed(Routes.PRESENCE_DETAILS),
+                              onTap: () => Get.toNamed(
+                                Routes.PRESENCE_DETAILS,
+                                arguments: presenceData,
+                              ),
                               tileColor: Colors.grey.shade200,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -255,11 +279,16 @@ class HomeView extends GetView<HomeController> {
                                           ),
                                         ),
                                         Text(
-                                          DateFormat.yMMMEd().format(
-                                            DateTime.parse(
-                                              presenceData['date'],
-                                            ),
-                                          ),
+                                          // DateFormat.yMMMEd().format(
+                                          //   DateTime.parse(
+                                          //     presenceData['date'],
+                                          //   ),
+                                          // ),
+                                          presenceData['date'] == null
+                                              ? "-"
+                                              : DateFormat.yMMMEd().format(
+                                                  DateTime.parse(
+                                                      presenceData['date'])),
                                           style: GoogleFonts.poppins(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 12,

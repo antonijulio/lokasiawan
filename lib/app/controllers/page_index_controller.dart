@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:geocoding/geocoding.dart';
 
@@ -158,20 +160,46 @@ class PageIndexController extends GetxController {
     String distance = "${coverageRadius.toInt()} meters";
 
     if (presenceSnapshot.docs.isEmpty) {
-      //^ SET ATTENDANCE IN
-      presenceCollection.doc(presenceDocumentID).set({
-        "date": currentDate.toIso8601String(),
-        "attendanceIn": {
-          "currentDate": currentDate.toIso8601String(),
-          "latitude": position.latitude,
-          "longitude": position.longitude,
-          "currentAddress": currentAddress,
-          "status": locationStatus,
-          "distance": distance,
-        }
-      });
+      /**
+       * Presensi masuk pertama kali, artinya user belum pernah 
+       * melakukan presensi sama sekali, docs => null
+       */
+      await Get.defaultDialog(
+        title: "Presensi Masuk",
+        middleText: "Apakah Anda Yakin Untuk melakukan presensi masuk?",
+        actions: [
+          OutlinedButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              "Batal",
+              style: GoogleFonts.poppins(),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              //^ SET ATTENDANCE IN
+              presenceCollection.doc(presenceDocumentID).set({
+                "date": currentDate.toIso8601String(),
+                "attendanceIn": {
+                  "currentDate": currentDate.toIso8601String(),
+                  "latitude": position.latitude,
+                  "longitude": position.longitude,
+                  "currentAddress": currentAddress,
+                  "status": locationStatus,
+                  "distance": distance,
+                }
+              });
 
-      Get.snackbar("Berhasil", "Anda telah melakukan presensi masuk");
+              Get.back();
+              Get.snackbar("Berhasil", "Anda telah melakukan presensi masuk");
+            },
+            child: Text(
+              "Iya",
+              style: GoogleFonts.poppins(),
+            ),
+          ),
+        ],
+      );
     } else {
       //^ CHECK TODAY ATTENDANCE DATA -> cek sudah absen atau belum
       DocumentSnapshot<Map<String, dynamic>> todayAttendanceData =
@@ -182,41 +210,95 @@ class PageIndexController extends GetxController {
 
         //^ CHECK ATTENDANCE DATA
         if (todayPresenceData?['attendanceOut'] != null) {
+          /**
+           * User telah melakukan absen masuk & keluar
+           */
           Get.snackbar(
             "Ups ..",
             "Kamu tidak bisa absen lagi karena sudah absen masuk dan keluar hari ini",
           );
         } else {
-          //^ UPDATE ATTENDANCE OUT
-          presenceCollection.doc(presenceDocumentID).update({
-            "date": currentDate.toIso8601String(),
-            "attendanceOut": {
-              "currentDate": currentDate.toIso8601String(),
-              "latitude": position.latitude,
-              "longitude": position.longitude,
-              "currentAddress": currentAddress,
-              "status": locationStatus,
-              "distance": distance,
-            }
-          });
+          /**
+           * User telah melakukan absen masuk dan ingin melakukan
+           * absen keluar
+           */
+          await Get.defaultDialog(
+            title: "Presensi keluar",
+            middleText: "Apakah Anda Yakin Untuk melakukan presensi keluar?",
+            actions: [
+              OutlinedButton(
+                onPressed: () => Get.back(),
+                child: Text(
+                  "Batal",
+                  style: GoogleFonts.poppins(),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  //^ UPDATE ATTENDANCE OUT
+                  presenceCollection.doc(presenceDocumentID).update({
+                    "date": currentDate.toIso8601String(),
+                    "attendanceOut": {
+                      "currentDate": currentDate.toIso8601String(),
+                      "latitude": position.latitude,
+                      "longitude": position.longitude,
+                      "currentAddress": currentAddress,
+                      "status": locationStatus,
+                      "distance": distance,
+                    }
+                  });
 
-          Get.snackbar("Berhasil", "Anda telah melakukan presensi keluar");
+                  Get.back();
+                  Get.snackbar(
+                    "Berhasil",
+                    "Anda telah melakukan presensi keluar",
+                  );
+                },
+                child: Text(
+                  "Iya",
+                  style: GoogleFonts.poppins(),
+                ),
+              ),
+            ],
+          );
         }
       } else {
-        //^ SET ATTENDANCE IN
-        presenceCollection.doc(presenceDocumentID).set({
-          "date": currentDate.toIso8601String(),
-          "attendanceIn": {
-            "currentDate": currentDate.toIso8601String(),
-            "latitude": position.latitude,
-            "longitude": position.longitude,
-            "currentAddress": currentAddress,
-            "status": locationStatus,
-            "distance": distance,
-          }
-        });
+        await Get.defaultDialog(
+          title: "Presensi Masuk",
+          middleText: "Apakah Anda Yakin Untuk melakukan presensi masuk?",
+          actions: [
+            OutlinedButton(
+              onPressed: () => Get.back(),
+              child: Text(
+                "Batal",
+                style: GoogleFonts.poppins(),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                //^ SET ATTENDANCE IN
+                presenceCollection.doc(presenceDocumentID).set({
+                  "date": currentDate.toIso8601String(),
+                  "attendanceIn": {
+                    "currentDate": currentDate.toIso8601String(),
+                    "latitude": position.latitude,
+                    "longitude": position.longitude,
+                    "currentAddress": currentAddress,
+                    "status": locationStatus,
+                    "distance": distance,
+                  }
+                });
 
-        Get.snackbar("Berhasil", "Anda telah melakukan presensi masuk");
+                Get.back();
+                Get.snackbar("Berhasil", "Anda telah melakukan presensi masuk");
+              },
+              child: Text(
+                "Iya",
+                style: GoogleFonts.poppins(),
+              ),
+            ),
+          ],
+        );
       }
     }
   }

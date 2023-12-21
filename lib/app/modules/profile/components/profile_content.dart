@@ -5,15 +5,13 @@ import 'package:lokasiawan/app/routes/app_pages.dart';
 
 import '../controllers/profile_controller.dart';
 
-class ProfileContent extends StatelessWidget {
+class ProfileContent extends GetView<ProfileController> {
   const ProfileContent({
     super.key,
     required this.userData,
-    required this.controller,
   });
 
   final Map<String, dynamic> userData;
-  final ProfileController controller;
 
   @override
   Widget build(BuildContext context) {
