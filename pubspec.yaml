@@ -2,24 +2,32 @@ name: lokasiawan
 version: 1.0.0+1
 publish_to: none
 description: A new Flutter project.
-environment: 
-  sdk: '>=3.1.5 <4.0.0'
+environment:
+  sdk: ">=3.1.5 <4.0.0"
 
-dependencies: 
-  cupertino_icons: ^1.0.2
-  get: 4.6.6
-  firebase_core: 2.21.0
-  firebase_auth: 4.12.1
+dependencies:
   cloud_firestore: 4.12.2
+  cupertino_icons: ^1.0.2
+  firebase_auth: 4.12.1
+  firebase_core: 2.21.0
   firebase_storage: 11.4.1
-  flutter: 
+  get: 4.6.6
+  google_fonts: 6.1.0
+  image_picker: ^1.0.4
+  convex_bottom_bar: ^3.2.0
+  intl: 0.18.1
+  geolocator: 10.1.0
+  geocoding: 2.1.1
+  syncfusion_flutter_datepicker: ^19.4.56
+  flutter:
     sdk: flutter
 
-dev_dependencies: 
+dev_dependencies:
   flutter_lints: ^2.0.0
-  flutter_test: 
+  flutter_test:
     sdk: flutter
 
-flutter: 
+flutter:
+  assets:
+    - assets/img/
   uses-material-design: true
-

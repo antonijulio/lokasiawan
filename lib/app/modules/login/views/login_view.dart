@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:lokasiawan/app/routes/app_pages.dart';
 
 import '../controllers/login_controller.dart';
 
@@ -38,19 +39,37 @@ class LoginView extends GetView<LoginController> {
           ),
           const SizedBox(height: 16.0),
           //^ INPUT BUTTON
-          ElevatedButton(
-            onPressed: () {
-              controller.loginUser();
-            },
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              child: Text("Login"),
+          Obx(
+            () => ElevatedButton(
+              onPressed: () async {
+                if (controller.isLoading.isFalse) {
+                  await controller.loginUser();
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 4.0,
+                ),
+                child: controller.isLoading.isFalse
+                    ? const Text("Login")
+                    : const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
             ),
           ),
           const SizedBox(height: 4.0),
           //^ lUPA PASSWORD
           TextButton(
-            onPressed: () {},
+            onPressed: () => Get.toNamed(Routes.FORGOT_PASSWORD),
             child: const Text("Lupa Password?"),
           ),
         ],
