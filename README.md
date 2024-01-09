@@ -1,16 +1,29 @@
-# lokasiawan
+aplikasi magang semester 7 di [pt daffa jaya utama](https://g.co/kgs/qch6RZA)
 
-A new Flutter project.
+# HIGHLIGHT SERTA CARA PENGGUNAAN APLIKASI
 
-## Getting Started
+## lokasiawan
 
-This project is a starting point for a Flutter application.
+- project aplikasi presensi karyawan berbasis lokasi menggunakan state management getX
+- aplikasi dapat merekam lokasi secara real time saat karyawan melakukan presensi
+- menggunakan package [geolocator](https://pub.dev/packages/geolocator) untuk mendapatkan lokasi user dalam bentuk koordinat dan mengkonfersinya menjadi bentuk alamat menggunakan package [geocoding](https://pub.dev/packages/geocoding).
+- terdapat 2 entitas sebagai pengguna aplikasi tersebut, yaitu admin dan karyawan.
+- admin dapat menambahkan karyawan dan menghapusnya dari sistem.
+- karyawan dapat melakukan presensi dan melihat semua presensi yang pernah dilakukan.
 
-A few resources to get you started if this is your first Flutter project:
+## installasi:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- clone repo ini dengan menjalankan perintah `git clone https://github.com/antonijulio/lokasiawan.git`.
+- untuk mendapatkan semua dependencies jalankan perintah `flutter pub get` pada project yang telah di clone.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## REQUIREMENT
+
+- silahkan hubungi [TELEGRAM SAYA](t.me/antonijulio) untuk authentifikasi pengguna.
+
+## preview aplikasi
+
+| Dashboard                       | Detail Presensi                       |
+| ------------------------------- | ------------------------------------- |
+| ![Dashboard](img_prev/img2.png) | ![Detail Presensi](img_prev/img1.png) |
+| Dialog Presensi                 | Profil                                |
+| ![Dashboard](img_prev/img4.png) | ![Detail Presensi](img_prev/img3.png) |
