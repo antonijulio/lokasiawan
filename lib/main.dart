@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,7 +30,9 @@ void main() async {
             ),
           );
         }
-        print(snapshot.data); //* print currentUser
+        if (kDebugMode) {
+          print(snapshot.data); //* print currentUser
+        }
         return GetMaterialApp(
           title: "Presence App",
           debugShowCheckedModeBanner: false,
