@@ -18,7 +18,7 @@ aplikasi magang semester 7 di [pt daffa jaya utama](https://g.co/kgs/qch6RZA)
 
 ## REQUIREMENT
 
-- silahkan hubungi [TELEGRAM SAYA](t.me/antonijulio) untuk authentifikasi pengguna.
+- silahkan hubungi [TELEGRAM SAYA](https://t.me/antonijulio) untuk authentifikasi pengguna.
 
 ## preview aplikasi
 
